@@ -1,65 +1,143 @@
-import './App.css';
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import Header from './MyComponents/Header';
-import Todos from './MyComponents/Todos';
-import Footer from './MyComponents/Footer';
-import AddTodo from './MyComponents/AddTodo';
-import About from './MyComponents/About';
-import LandingPage from './MyComponents/pages/LandingPage';
-import LoginPage from './MyComponents/pages/LoginPage';
-import RegisterPage from './MyComponents/pages/RegisterPage';
-import ForgetPasswordPage from './MyComponents/pages/ForgetPasswordPage';
-import HomePage from './MyComponents/pages/HomePage';
+import "./App.css";
+import { useState, useEffect } from "react";
+import Square from "./Components/Square";
+import { Patterns } from "./Patterns";
 
 function App() {
-  const [todos, setTodos] = useState([]);
+  const [board, setBoard] = useState(["", "", "", "", "", "", "", "", ""]);
+  const [player, setPlayer] = useState("O");
+  const [result, setResult] = useState({ winner: "none", state: "none" });
 
   useEffect(() => {
-    const storedTodos = JSON.parse(localStorage.getItem('todos'));
-    if (storedTodos) {
-      setTodos(storedTodos);
+    checkWin();
+    checkIfTie();
+
+    if (player == "X") {
+      setPlayer("O");
+    } else {
+      setPlayer("X");
     }
-  }, []);
+  }, [board]);
 
   useEffect(() => {
-    localStorage.setItem('todos', JSON.stringify(todos));
-  }, [todos]);
+    if (result.state != "none") {
+      alert(`Game Finished! Winning Player: ${result.winner}`);
+      restartGame();
+    }
+  }, [result]);
 
-  const onDelete = (todo) => {
-    const updatedTodos = todos.filter((e) => e !== todo);
-    setTodos(updatedTodos);
+  const chooseSquare = (square) => {
+    setBoard(
+      board.map((val, idx) => {
+        if (idx == square && val == "") {
+          return player;
+        }
+
+        return val;
+      })
+    );
   };
 
-  const addTodo = (title, desc) => {
-    const sno = todos.length === 0 ? 0 : todos[todos.length - 1].sno + 1;
-    const newTodo = {
-      sno: sno,
-      title: title,
-      desc: desc,
-    };
-    setTodos([...todos, newTodo]);
+  const checkWin = () => {
+    Patterns.forEach((currPattern) => {
+      const firstPlayer = board[currPattern[0]];
+      if (firstPlayer == "") return;
+      let foundWinningPattern = true;
+      currPattern.forEach((idx) => {
+        if (board[idx] != firstPlayer) {
+          foundWinningPattern = false;
+        }
+      });
+
+      if (foundWinningPattern) {
+        setResult({ winner: player, state: "Won" });
+      }
+    });
+  };
+
+  const checkIfTie = () => {
+    let filled = true;
+    board.forEach((square) => {
+      if (square == "") {
+        filled = false;
+      }
+    });
+
+    if (filled) {
+      setResult({ winner: "No One", state: "Tie" });
+    }
+  };
+
+  const restartGame = () => {
+    setBoard(["", "", "", "", "", "", "", "", ""]);
+    setPlayer("O");
   };
 
   return (
-    <Router>
-      <div>
-        <Header title="My Todos List" searchBar={false} />
-        <Switch>
-          <Route path="/login" component={LoginPage} />
-          <Route path="/register" component={RegisterPage} />
-          <Route path="/forget-password" component={ForgetPasswordPage} />
-          <Route exact path="/home" component={HomePage} />
-          <Route exact path="/">
-            <AddTodo addTodo={addTodo} />
-            <Todos todos={todos} onDelete={onDelete} />
-          </Route>
-          <Route exact path="/about" component={About} />
-          <Route exact path="/landing" component={LandingPage} />
-        </Switch>
-        <Footer />
+    <div className="App">
+      <div className="board">
+        <div className="row">
+          <Square
+            val={board[0]}
+            chooseSquare={() => {
+              chooseSquare(0);
+            }}
+          />
+          <Square
+            val={board[1]}
+            chooseSquare={() => {
+              chooseSquare(1);
+            }}
+          />
+          <Square
+            val={board[2]}
+            chooseSquare={() => {
+              chooseSquare(2);
+            }}
+          />
+        </div>
+        <div className="row">
+          <Square
+            val={board[3]}
+            chooseSquare={() => {
+              chooseSquare(3);
+            }}
+          />
+          <Square
+            val={board[4]}
+            chooseSquare={() => {
+              chooseSquare(4);
+            }}
+          />
+          <Square
+            val={board[5]}
+            chooseSquare={() => {
+              chooseSquare(5);
+            }}
+          />
+        </div>
+        <div className="row">
+          <Square
+            val={board[6]}
+            chooseSquare={() => {
+              chooseSquare(6);
+            }}
+          />
+          <Square
+            val={board[7]}
+            chooseSquare={() => {
+              chooseSquare(7);
+            }}
+          />
+          <Square
+            val={board[8]}
+            chooseSquare={() => {
+              chooseSquare(8);
+            }}
+          />
+        </div>
       </div>
-    </Router>
+    </div>
   );
 }
 
