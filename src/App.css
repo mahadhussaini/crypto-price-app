@@ -1,43 +1,67 @@
 .App {
-  width: 100vw;
-  height: 100vh;
+  text-align: center;
+  font-family: arial;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.Menu {
+  width: 500px;
+  height: 500px;
+  border-radius: 10px;
+  background-color: lightseagreen;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-body {
-  padding: 0;
-  margin: 0;
+.Menu input, button {
+  width: 300px;
+  height: 50px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  font-size: 20px;
 }
 
-.board {
+button:hover {
+  cursor: pointer;
+}
+
+.Quiz {
   width: 500px;
   height: 500px;
-  background-color: aquamarine;
-  border: 1px solid black;
+  border-radius: 10px;
+  background-color: lightseagreen;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.row {
-  flex: 33%;
+.Menu, .Quiz, .EndScreen h1 {
+  color: white;
+}
+
+.EndScreen {
+  width: 500px;
+  height: 500px;
+  border-radius: 10px;
+  background-color: lightseagreen;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.square {
-  flex: 33%;
-  height: 100%;
-  border: 1px solid black;
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-  font-size: 30px;
-  color: black;
-  font-family: Arial, Helvetica, sans-serif;
+#nextQuestion {
+  width: 200px;
 }
 
-.square:active {
-  background-color: #64f4c4;
+h3 {
+  color: #ffffff;
+
 }
