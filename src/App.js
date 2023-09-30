@@ -1,32 +1,24 @@
 import "./App.css";
-import Menu from "./components/Menu";
-import Quiz from "./components/Quiz";
-import EndScreen from "./components/EndScreen";
-import { useState } from "react";
-import { GameStateContext } from "./helpers/Contexts";
-// ['menu', 'playing', 'finished']
-function App() {
-  const [gameState, setGameState] = useState("menu");
-  const [userName, setUserName] = useState("");
-  const [score, setScore] = useState(0);
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Navbar } from "./components/navbar";
+import { Shop } from "./pages/shop/shop";
+import { Contact } from "./pages/contact";
+import { Cart } from "./pages/cart/cart";
+import { ShopContextProvider } from "./context/shop-context";
 
+function App() {
   return (
     <div className="App">
-      <h1>Quiz App</h1>
-      <GameStateContext.Provider
-        value={{
-          gameState,
-          setGameState,
-          userName,
-          setUserName,
-          score,
-          setScore,
-        }}
-      >
-        {gameState === "menu" && <Menu />}
-        {gameState === "playing" && <Quiz />}
-        {gameState === "finished" && <EndScreen />}
-      </GameStateContext.Provider>
+      <ShopContextProvider>
+        <Router>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Shop />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/cart" element={<Cart />} />
+          </Routes>
+        </Router>
+      </ShopContextProvider>
     </div>
   );
 }
