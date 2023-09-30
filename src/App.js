@@ -1,24 +1,47 @@
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Navbar } from "./components/navbar";
-import { Shop } from "./pages/shop/shop";
-import { Contact } from "./pages/contact";
-import { Cart } from "./pages/cart/cart";
-import { ShopContextProvider } from "./context/shop-context";
+import { useEffect, useState } from "react";
+import axios from 'axios';
+import Coin from "./components/Coin";
 
 function App() {
+  const [listOfCoins, setListOfCoins] = useState([]);
+  const [searchWord, setSearchWord] = useState("");
+
+  useEffect(() => {
+    axios.get("https://api.coinstats.app/public/v1/coins?skip=0").then(
+      (response) => {
+        setListOfCoins(response.data.coins);
+      }
+    );
+  }, []);
+
+  const filteredCoins = listOfCoins.filter((coin) => {
+    return coin.name.toLowerCase().includes(searchWord.toLowerCase());
+  });
+
   return (
     <div className="App">
-      <ShopContextProvider>
-        <Router>
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Shop />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/cart" element={<Cart />} />
-          </Routes>
-        </Router>
-      </ShopContextProvider>
+      <div className="cryptoHeader">
+        <input
+          type="text"
+          placeholder="Bitcoin..."
+          onChange={(event) => {
+            setSearchWord(event.target.value);
+          }}
+        />
+      </div>
+      <div className="cryptoDisplay">
+        {filteredCoins.map((coin) => {
+          return (
+            <Coin
+              name={coin.name}
+              icon={coin.icon}
+              price={coin.price}
+              symbol={coin.symbol}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }
